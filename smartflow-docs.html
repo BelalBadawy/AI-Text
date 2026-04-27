@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartFlow — Legacy System Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161d;
+    --surface2: #1a1e28;
+    --border: #252a38;
+    --accent: #4f8ef7;
+    --accent2: #7dd3a8;
+    --accent3: #f5a623;
+    --accent4: #e05c5c;
+    --text: #cdd3e0;
+    --text-dim: #6b7590;
+    --text-bright: #edf0f7;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0d0f14 0%, #111827 60%, #0d1520 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 80px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(125,211,168,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.25);
+    padding: 4px 12px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(42px, 6vw, 72px);
+    color: var(--text-bright);
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 28px;
+    min-width: 130px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .stat-card:nth-child(2)::before { background: var(--accent2); }
+  .stat-card:nth-child(3)::before { background: var(--accent3); }
+  .stat-card:nth-child(4)::before { background: var(--accent4); }
+  .stat-card:nth-child(5)::before { background: #a78bfa; }
+  .stat-card:nth-child(6)::before { background: #f472b6; }
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 28px;
+    color: var(--text-bright);
+    font-weight: 500;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* LAYOUT */
+  .container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 340px);
+  }
+
+  /* SIDEBAR NAV */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .nav-section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0 24px 8px;
+    margin-top: 20px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 400;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+  }
+  .nav-link:hover {
+    color: var(--text-bright);
+    background: rgba(255,255,255,0.03);
+    border-left-color: var(--accent);
+  }
+  .nav-link .nav-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    opacity: 0.5;
+    min-width: 18px;
+  }
+
+  /* MAIN CONTENT */
+  .content {
+    padding: 48px 60px 80px;
+    max-width: 900px;
+  }
+
+  .section {
+    margin-bottom: 80px;
+    animation: fadeIn 0.4s ease both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    background: rgba(79,142,247,0.1);
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid rgba(79,142,247,0.2);
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--text-bright);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* TABLES */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 12px 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(37,42,56,0.6);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  td strong, td code {
+    color: var(--text-bright);
+  }
+  td code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(79,142,247,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #8fa4c8;
+    position: relative;
+  }
+  .code-block .kw { color: var(--accent); }
+  .code-block .cm { color: var(--text-dim); font-style: italic; }
+  .code-block .st { color: var(--accent2); }
+  .code-block .hl { color: var(--text-bright); }
+  pre { white-space: pre; }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+  }
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 32px;
+  }
+  .flow-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    outline: 2px solid var(--accent);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .flow-line {
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--border));
+    flex: 1;
+    min-height: 28px;
+  }
+  .flow-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 4px;
+    flex: 1;
+    font-size: 13.5px;
+  }
+  .flow-content strong { color: var(--text-bright); }
+  .flow-content .sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* TAGS / BADGES */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .badge-blue { background: rgba(79,142,247,0.12); color: var(--accent); border: 1px solid rgba(79,142,247,0.25); }
+  .badge-green { background: rgba(125,211,168,0.12); color: var(--accent2); border: 1px solid rgba(125,211,168,0.25); }
+  .badge-orange { background: rgba(245,166,35,0.12); color: var(--accent3); border: 1px solid rgba(245,166,35,0.25); }
+  .badge-red { background: rgba(224,92,92,0.12); color: var(--accent4); border: 1px solid rgba(224,92,92,0.25); }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 3px solid var(--accent4);
+    background: rgba(224,92,92,0.06);
+    padding: 16px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+  .callout.warn { border-color: var(--accent3); background: rgba(245,166,35,0.06); }
+  .callout.info { border-color: var(--accent); background: rgba(79,142,247,0.06); }
+  .callout-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--accent4);
+  }
+  .callout.warn .callout-title { color: var(--accent3); }
+  .callout.info .callout-title { color: var(--accent); }
+
+  /* GRID CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card-title {
+    font-weight: 600;
+    color: var(--text-bright);
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .card-body { font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
+
+  /* COMPARE TABLE */
+  .compare-grid {
+    display: grid;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  .compare-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    padding-top: 4px;
+    text-transform: uppercase;
+  }
+  .compare-old {
+    background: rgba(224,92,92,0.07);
+    border: 1px solid rgba(224,92,92,0.2);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    color: #c87070;
+  }
+  .compare-new {
+    background: rgba(125,211,168,0.07);
+    border: 1px solid rgba(125,211,168,0.2);
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+    color: var(--accent2);
+  }
+  .compare-header {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .compare-header span {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 0 12px;
+  }
+
+  /* SECTION TEXT */
+  p { margin-bottom: 14px; color: var(--text); }
+  ul { padding-left: 22px; margin: 10px 0 16px; }
+  li { margin-bottom: 6px; font-size: 13.5px; }
+
+  /* PHASE TIMELINE */
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .phase:nth-child(1)::before { background: var(--accent); }
+  .phase:nth-child(2)::before { background: var(--accent2); }
+  .phase:nth-child(3)::before { background: var(--accent3); }
+  .phase:nth-child(4)::before { background: var(--accent4); }
+  .phase-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+  }
+  .phase-title {
+    font-weight: 600;
+    color: var(--text-bright);
+    font-size: 13.5px;
+    margin-bottom: 8px;
+  }
+  .phase-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent3);
+    background: rgba(245,166,35,0.1);
+    padding: 2px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .phase ul { padding-left: 16px; }
+  .phase li { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .hero { padding: 48px 24px 40px; }
+    .content { padding: 32px 24px 60px; }
+    .phases { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Internal Technical Documentation · March 2026</div>
+  <h1>Smart<em>Flow</em></h1>
+  <p class="hero-sub">Complete analysis of the legacy workflow management & job tracking system — enabling a new engineering team to redesign and redevelop from scratch.</p>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">438</div><div class="stat-label">C# Source Files</div></div>
+    <div class="stat-card"><div class="stat-num">48</div><div class="stat-label">Domain Models</div></div>
+    <div class="stat-card"><div class="stat-num">39</div><div class="stat-label">Repositories</div></div>
+    <div class="stat-card"><div class="stat-num">45</div><div class="stat-label">DB Tables</div></div>
+    <div class="stat-card"><div class="stat-num">23</div><div class="stat-label">Controllers</div></div>
+    <div class="stat-card"><div class="stat-num">78</div><div class="stat-label">Razor Views</div></div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-section-label">Overview</div>
+    <a class="nav-link" href="#s1"><span class="nav-num">01</span> Executive Summary</a>
+    <a class="nav-link" href="#s2"><span class="nav-num">02</span> Business Domain</a>
+    <div class="nav-section-label">System</div>
+    <a class="nav-link" href="#s3"><span class="nav-num">03</span> Technology Stack</a>
+    <a class="nav-link" href="#s4"><span class="nav-num">04</span> Architecture</a>
+    <a class="nav-link" href="#s5"><span class="nav-num">05</span> Database Schema</a>
+    <a class="nav-link" href="#s6"><span class="nav-num">06</span> Domain Model</a>
+    <div class="nav-section-label">Implementation</div>
+    <a class="nav-link" href="#s7"><span class="nav-num">07</span> API Endpoints</a>
+    <a class="nav-link" href="#s8"><span class="nav-num">08</span> Business Logic</a>
+    <a class="nav-link" href="#s9"><span class="nav-num">09</span> Frontend</a>
+    <a class="nav-link" href="#s10"><span class="nav-num">10</span> Auth & Security</a>
+    <a class="nav-link" href="#s11"><span class="nav-num">11</span> Integrations</a>
+    <div class="nav-section-label">Future</div>
+    <a class="nav-link" href="#s12"><span class="nav-num">12</span> Technical Debt</a>
+    <a class="nav-link" href="#s13"><span class="nav-num">13</span> Modern Architecture</a>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- S1: EXECUTIVE SUMMARY -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Executive Summary</h2>
+      </div>
+      <p>SmartFlow is an enterprise <strong style="color:var(--text-bright)">workflow management and job tracking system</strong> built for Minapharm (pharmaceutical). It manages the full lifecycle of packaging/labeling change requests — from initial submission through multi-stage approval workflows, to final job completion and master file archival.</p>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div><div class="flow-content"><strong>Request Submission</strong><div class="sub">Packaging label update for a drug product</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot" style="background:var(--accent2);outline-color:var(--accent2)"></div><div class="flow-line" style="background:linear-gradient(to bottom,var(--accent2),var(--border))"></div></div><div class="flow-content"><strong>Review & Approval</strong><div class="sub">Multi-department review and sign-off</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot" style="background:var(--accent3);outline-color:var(--accent3)"></div><div class="flow-line" style="background:linear-gradient(to bottom,var(--accent3),var(--border))"></div></div><div class="flow-content"><strong>Job Creation</strong><div class="sub">Approved items become executable jobs</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot" style="background:#a78bfa;outline-color:#a78bfa"></div><div class="flow-line" style="background:linear-gradient(to bottom,#a78bfa,var(--border))"></div></div><div class="flow-content"><strong>Workflow Execution</strong><div class="sub">Sequential / parallel process functions with time tracking</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot" style="background:var(--accent4);outline-color:var(--accent4)"></div><div class="flow-line" style="background:linear-gradient(to bottom,var(--accent4),var(--border))"></div></div><div class="flow-content"><strong>Master File Management</strong><div class="sub">Versioned document control and approval</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot" style="background:var(--accent2);outline-color:var(--accent2)"></div></div><div class="flow-content"><strong>Job Closure & Reporting</strong><div class="sub">Analytics, delay tracking, and archival</div></div></div>
+      </div>
+    </section>
+
+    <!-- S2: BUSINESS DOMAIN -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Business Domain</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Concept</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Request</strong></td><td>A change control request (e.g., "Update label for Product X"). Contains one or more Request Items.</td></tr>
+            <tr><td><strong>Request Item</strong></td><td>A single line item specifying a product, target, and workflow to apply.</td></tr>
+            <tr><td><strong>Job</strong></td><td>An executable unit of work created from an approved Request Item. Goes through a Workflow.</td></tr>
+            <tr><td><strong>Workflow</strong></td><td>A template defining the sequence of Processes needed to complete a type of Job. Bound to a Target.</td></tr>
+            <tr><td><strong>Process</strong></td><td>A stage within a Workflow, owned by a Department (e.g., "Design Review", "Quality Approval").</td></tr>
+            <tr><td><strong>Process Function</strong></td><td>An individual task within a Process (e.g., "Review artwork"). Has owners, lead time, and inputs.</td></tr>
+            <tr><td><strong>Transaction</strong></td><td>A runtime instance of a Process Function being executed for a specific Job. Tracks status and timing.</td></tr>
+            <tr><td><strong>Product Master File</strong></td><td>A versioned document (artwork, specification) associated with a product, with its own approval flow.</td></tr>
+            <tr><td><strong>Workspace</strong></td><td>Multi-tenancy boundary — users and data are scoped to workspaces.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:24px;font-weight:600;color:var(--text-bright)">User Roles</p>
+      <div class="card-grid">
+        <div class="card"><div class="card-title">Requester</div><div class="card-body">Submits change requests with product details and change control documents.</div></div>
+        <div class="card"><div class="card-title">Request Approver</div><div class="card-body">Reviews and approves or rejects request items.</div></div>
+        <div class="card"><div class="card-title">Function Owner</div><div class="card-body">Executes assigned functions within a job (review, approve, design).</div></div>
+        <div class="card"><div class="card-title">Workflow Admin</div><div class="card-body">Manages workflow templates and process configurations.</div></div>
+        <div class="card"><div class="card-title">System Admin</div><div class="card-body">Manages users, roles, claims, workspaces, and lookups.</div></div>
+        <div class="card"><div class="card-title">Manager</div><div class="card-body">Views dashboards, workload analysis, and delay reports.</div></div>
+      </div>
+    </section>
+
+    <!-- S3: TECH STACK -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Technology Stack</h2>
+      </div>
+      <p style="font-weight:600;color:var(--text-bright);margin-bottom:12px">Backend</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Technology</th><th>Version</th></tr></thead>
+          <tbody>
+            <tr><td>Framework</td><td><strong>ASP.NET Core MVC</strong></td><td><span class="badge badge-red">2.2 EOL</span></td></tr>
+            <tr><td>Language</td><td><strong>C#</strong></td><td>7.3</td></tr>
+            <tr><td>ORM</td><td><strong>Entity Framework Core</strong></td><td>2.2</td></tr>
+            <tr><td>Identity</td><td><strong>ASP.NET Core Identity</strong></td><td>2.2</td></tr>
+            <tr><td>Database (Primary)</td><td><strong>SQL Server</strong></td><td>—</td></tr>
+            <tr><td>Database (Secondary)</td><td><strong>Oracle</strong></td><td>via Oracle.EFCore 2.19</td></tr>
+            <tr><td>Object Mapping</td><td><strong>AutoMapper</strong></td><td>6.1.1</td></tr>
+            <tr><td>Email</td><td><strong>MailKit / MimeKit</strong></td><td>2.2.0</td></tr>
+            <tr><td>PDF Generation</td><td><strong>IronPdf</strong></td><td>2019.8</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-weight:600;color:var(--text-bright);margin:24px 0 12px">Frontend</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Technology</th></tr></thead>
+          <tbody>
+            <tr><td>Template Engine</td><td><strong>Razor (.cshtml)</strong></td></tr>
+            <tr><td>CSS Framework</td><td><strong>Bootstrap 4</strong> + Metronic Admin Theme</td></tr>
+            <tr><td>JavaScript</td><td><strong>jQuery 3.x</strong> (no SPA framework)</td></tr>
+            <tr><td>Data Tables</td><td>DataTables.js</td></tr>
+            <tr><td>Charts</td><td>Chart.js, Morris.js</td></tr>
+            <tr><td>File Upload</td><td>Dropzone.js</td></tr>
+            <tr><td>Notifications</td><td>Toastr, SweetAlert2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S4: ARCHITECTURE -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Solution Architecture</h2>
+      </div>
+      <div class="code-block"><pre><span class="hl">SmartFlow.sln</span>
+│
+├── <span class="kw">SmartFlow.Web</span>           → Presentation Layer (MVC Controllers, Views, ViewModels)
+├── <span class="kw">SmartFlow.Application</span>   → Application Layer (Services, DTOs, Business Logic)
+├── <span class="kw">SmartFlow.Core</span>          → Domain Layer (Entities, Repository Interfaces, Enums)
+├── <span class="kw">SmartFlow.Data</span>          → Infrastructure Layer (EF Core DbContext, Repositories)
+├── <span class="kw">SmartFlow.Shared</span>        → Cross-Cutting (Base Classes: EntityBase, AuditEntityBase)
+├── <span class="kw">SmartFlow.Models</span>        → Shared Models (ViewModels shared across layers)
+├── <span class="kw">SmartFlow.Infra.IOC</span>     → Dependency Injection Container Registration
+└── <span class="kw">TimingService</span>           → Background Console App (scheduling, reminders)</pre></div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin-bottom:12px">Design Patterns</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pattern</th><th>Implementation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Repository Pattern</strong></td><td>Generic <code>IRepository&lt;T&gt;</code> in Core, concrete implementations in Data</td></tr>
+            <tr><td><strong>Unit of Work</strong></td><td><code>UnitOfWork.cs</code> manages all repos, provides <code>Commit()</code> / <code>CommitAsync()</code></td></tr>
+            <tr><td><strong>Service Layer</strong></td><td>Application services with interfaces, injected into controllers</td></tr>
+            <tr><td><strong>Soft Delete</strong></td><td><code>DeletedDate</code> / <code>DeletedById</code> fields instead of physical deletes</td></tr>
+            <tr><td><strong>Audit Trail</strong></td><td><code>AuditEntityBase</code> with <code>CreatedById</code>, <code>UpdatedById</code>, timestamps</td></tr>
+            <tr><td><strong>Multi-Tenancy</strong></td><td><code>WorkSpaceId</code> field on all entities for data isolation</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S5: DATABASE -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Database Schema</h2>
+      </div>
+      <p>45 tables organized into 6 domain groups. All tables extend <code>AuditEntityBase</code> with soft-delete and multi-tenancy fields.</p>
+
+      <p style="font-weight:600;color:var(--text-bright);margin:20px 0 10px">Domain Groups</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Domain</th><th>Key Tables</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-blue">Identity</span></td><td>AspNetUsers, AspNetRoles, AspNetUserRoles, AppClaims, DataLevels</td></tr>
+            <tr><td><span class="badge badge-green">Organization</span></td><td>WorkSpaces, UserWorkSpaces, Departments</td></tr>
+            <tr><td><span class="badge badge-orange">Workflow Config</span></td><td>WorkFlows, Processes, ProcessFunctions, ProcessFunctionOwners, ProcessFunctionInputs</td></tr>
+            <tr><td><span class="badge badge-blue">Requests</span></td><td>Requests, RequestItems, RequestStatuses, RequestAttachments</td></tr>
+            <tr><td><span class="badge badge-red">Job Execution</span></td><td>Jobs, Transactions, TransactionDeliverables, TransactionTime, TransactionDelays</td></tr>
+            <tr><td><span class="badge badge-green">Products</span></td><td>Products, ProductMasterFiles, ProductMasterFileAttachments, ProductionAreas</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin:24px 0 10px">Audit Fields (on every table)</p>
+      <div class="code-block"><pre><span class="cm">// AuditEntityBase — inherited by all entities</span>
+<span class="kw">CreatedById</span>   int         <span class="cm">// User who created</span>
+<span class="kw">UpdatedById</span>   int?        <span class="cm">// User who last updated</span>
+<span class="kw">DeletedById</span>   int?        <span class="cm">// User who soft-deleted</span>
+<span class="kw">CreatedDate</span>   datetime2   <span class="cm">// Creation timestamp</span>
+<span class="kw">UpdatedDate</span>   datetime2?  <span class="cm">// Last update timestamp</span>
+<span class="kw">DeletedDate</span>   datetime2?  <span class="cm">// Soft delete timestamp</span>
+<span class="kw">WorkSpaceId</span>   int?        <span class="cm">// Multi-tenant scope</span></pre></div>
+    </section>
+
+    <!-- S6: DOMAIN MODEL -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Domain Model</h2>
+      </div>
+      <div class="code-block"><pre><span class="kw">Job</span> (Central Business Object)
+├── JobId, Title, Description
+├── WorkFlowId     → WorkFlow
+├── StatusId       → Status
+├── RequestItemId  → RequestItem
+├── ProductCode, ItemCode, ProductName
+├── OpenDate, CloseDate, ExpireDate
+├── IsPriority, SortOrder, ParentId (self-ref)
+│
+├── <span class="st">Transactions[]</span>        → Transaction
+├── <span class="st">JobAttachments[]</span>      → JobAttachment
+├── <span class="st">ProductMasterFiles[]</span>  → ProductMasterFile
+└── <span class="st">TransactionTimes[]</span>    → TransactionTime</pre></div>
+
+      <div class="code-block"><pre><span class="kw">Transaction</span> (Runtime Task Instance)
+├── TransactionId
+├── JobId              → Job
+├── ProcessFunctionId  → ProcessFunction
+├── OwnerId            → User
+├── StatusId           → Status (Pending/InProgress/Completed/Rejected)
+├── LeadTime (int, hours)
+│
+├── <span class="st">TransactionDeliverables[]</span>  — submitted input values
+├── <span class="st">TransactionAttachments[]</span>   — uploaded files
+├── <span class="st">TransactionTimes[]</span>         — timing records
+└── <span class="st">TransactionDelays[]</span>        — delay reason entries</pre></div>
+    </section>
+
+    <!-- S7: API ENDPOINTS -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>API & Controller Endpoints</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Controller</th><th>Route</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><strong>AccountsController</strong></td><td><code>/Accounts/*</code></td><td>Login, logout, SSO token validation</td></tr>
+            <tr><td><strong>DashboardsController</strong></td><td><code>/dashboards/*</code></td><td>Function owner dashboard, delays, user dashboard</td></tr>
+            <tr><td><strong>JobsController</strong></td><td><code>/Jobs/*</code></td><td>Full CRUD for jobs, file uploads (~50 actions)</td></tr>
+            <tr><td><strong>FunctionsController</strong></td><td><code>/functions/*</code></td><td>Accept/reject functions, view function inputs</td></tr>
+            <tr><td><strong>RequestsController</strong></td><td><code>/Requests/*</code></td><td>Request CRUD, approve/reject items</td></tr>
+            <tr><td><strong>ReportsController</strong></td><td><code>/reports/*</code></td><td>16+ analytics views (process, workload, delay)</td></tr>
+            <tr><td><strong>WorkflowController</strong></td><td><code>/lookups/workflow/*</code></td><td>Workflow CRUD, clone, map between workflows</td></tr>
+            <tr><td><strong>UsersController</strong></td><td><code>/Users/*</code></td><td>User CRUD with role and workspace assignments</td></tr>
+            <tr><td><strong>OracleApiController</strong></td><td><code>/OracleApi/*</code></td><td>Oracle DB integration (product categories)</td></tr>
+            <tr><td><strong>ValidationController</strong></td><td><code>/Validation/*</code></td><td>Image and text comparison/validation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin:24px 0 10px">Key Endpoints</p>
+      <div class="code-block"><pre><span class="cm">// Function Execution</span>
+<span class="kw">GET</span>  /functions/Create/{jobId}/{functionId}/{transactionId}/{canComplete}
+<span class="kw">POST</span> /functions/Accept    <span class="cm">→ complete function, submit deliverables, trigger next</span>
+<span class="kw">POST</span> /functions/Reject    <span class="cm">→ route back to specified process</span>
+
+<span class="cm">// Job Management</span>
+<span class="kw">GET</span>  /Jobs/Index
+<span class="kw">POST</span> /Jobs/Create
+<span class="kw">GET</span>  /Jobs/JobDetails/{id}
+
+<span class="cm">// Request Approval</span>
+<span class="kw">POST</span> /Requests/ApproveRequestItemAndOpenJob
+<span class="kw">POST</span> /Requests/RejectRequestItem</pre></div>
+    </section>
+
+    <!-- S8: BUSINESS LOGIC -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <h2>Business Logic & Services</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Service</th><th>Key Responsibilities</th></tr></thead>
+          <tbody>
+            <tr><td><strong>JobService</strong></td><td>Create jobs from requests, manage lifecycle, assign workflows</td></tr>
+            <tr><td><strong>TransactionService</strong></td><td>Create transactions, update status, manage accept/reject flow</td></tr>
+            <tr><td><strong>TransactionTimeServices</strong></td><td>Calculate expected dates, apply holidays, workload rules</td></tr>
+            <tr><td><strong>ProcessFunctionService</strong></td><td>Manage function configs, owners, inputs, lead times</td></tr>
+            <tr><td><strong>WorkFlowService</strong></td><td>CRUD for workflow templates, cloning, mapping</td></tr>
+            <tr><td><strong>EmailServices</strong></td><td>Send notification emails via SMTP using MailKit</td></tr>
+            <tr><td><strong>OracleAPIServices</strong></td><td>Fetch product data from Oracle DB</td></tr>
+            <tr><td><strong>GroupDocsServices</strong></td><td>Document comparison via GroupDocs Cloud API</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin:24px 0 10px">Timing & Workload Calculation</p>
+      <div class="callout info">
+        <div class="callout-title">How Lead Time Works</div>
+        Each ProcessFunction has a <strong>LeadTime (hours)</strong>. TransactionTime calculates expected dates considering: function dependencies (sequential wait for predecessors), 8-hour workdays, official holidays (excluded), and the <code>ApplyWorkLoad</code> flag for distributing work across owners. The <strong>TimingService</strong> background job periodically recalculates these dates.
+      </div>
+    </section>
+
+    <!-- S9: FRONTEND -->
+    <section class="section" id="s9">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <h2>Frontend Architecture</h2>
+      </div>
+      <p>Server-side rendered via <strong style="color:var(--text-bright)">Razor views (.cshtml)</strong>. No SPA framework. All navigation is full page loads or AJAX-loaded partial views.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">Performance Note</div>
+        The layout includes <strong>85+ script tags</strong> with no bundling or module system. jQuery is used for all DOM manipulation and event handling.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pattern</th><th>Implementation</th></tr></thead>
+          <tbody>
+            <tr><td>Data Tables</td><td>DataTables.js with server-side pagination, Excel/PDF export</td></tr>
+            <tr><td>Modal Forms</td><td>Bootstrap 4 modals loaded via jQuery <code>.load()</code> AJAX</td></tr>
+            <tr><td>File Upload</td><td>Dropzone.js with server-side <code>Upload</code> endpoints</td></tr>
+            <tr><td>Charts</td><td>Chart.js and Morris.js for analytics dashboards</td></tr>
+            <tr><td>Workflow Visualization</td><td>Custom SVG-based process flow diagram (ViewComponent)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S10: AUTH -->
+    <section class="section" id="s10">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <h2>Authentication & Authorization</h2>
+      </div>
+      <div class="flow">
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div><div class="flow-content"><strong>User navigates to login</strong></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div><div class="flow-content"><strong>System calls Passport API</strong><div class="sub">https://mwpapi.minapharm.com/api/auth/login with username/password</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div><div class="flow-content"><strong>Token validation</strong><div class="sub">https://passport.minapharm.com/Account/ValidateToken</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot"></div><div class="flow-line"></div></div><div class="flow-content"><strong>Find / create local AppUser</strong><div class="sub">Signs user in via ASP.NET Core Identity cookie</div></div></div>
+        <div class="flow-step"><div class="flow-connector"><div class="flow-dot" style="background:var(--accent2);outline-color:var(--accent2)"></div></div><div class="flow-content"><strong>User selects Workspace</strong><div class="sub">Workspace ID stored in session, all queries filtered by it</div></div></div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Security Issue</div>
+        <code>HomeController</code> has <code>[AllowAnonymous]</code> on scheduling endpoints (<code>SendReminder</code>, <code>UpdateTiming</code>) — these should be secured.
+      </div>
+    </section>
+
+    <!-- S11: INTEGRATIONS -->
+    <section class="section" id="s11">
+      <div class="section-header">
+        <span class="section-num">11</span>
+        <h2>External Integrations</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Integration</th><th>Purpose</th><th>Protocol</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Passport API</strong></td><td>SSO authentication</td><td><span class="badge badge-blue">REST HTTPS</span></td></tr>
+            <tr><td><strong>Oracle Database</strong></td><td>Product catalog, formula items</td><td><span class="badge badge-orange">EF Core Oracle</span></td></tr>
+            <tr><td><strong>GroupDocs Cloud</strong></td><td>Document comparison</td><td><span class="badge badge-blue">REST API</span></td></tr>
+            <tr><td><strong>Draftable Compare</strong></td><td>Alternative document comparison</td><td><span class="badge badge-blue">REST API</span></td></tr>
+            <tr><td><strong>Internal SMTP</strong></td><td>Email notifications</td><td><span class="badge badge-green">SMTP :25</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S12: TECH DEBT -->
+    <section class="section" id="s12">
+      <div class="section-header">
+        <span class="section-num">12</span>
+        <h2>Known Technical Debt</h2>
+      </div>
+      <div class="callout">
+        <div class="callout-title">Critical</div>
+        <strong>.NET Core 2.2 is End-of-Life</strong> (EOL December 2019) — no security patches. All NuGet packages are from 2019–2020 vintage.
+      </div>
+      <div class="table-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th>Area</th><th>Issue</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-red">Architecture</span></td><td>Fat controllers — JobsController (43.8KB), RequestsController (30.9KB) contain significant business logic</td></tr>
+            <tr><td><span class="badge badge-red">Architecture</span></td><td>No API layer — all endpoints return views, not JSON</td></tr>
+            <tr><td><span class="badge badge-red">Testing</span></td><td>No automated tests — no test projects in the solution</td></tr>
+            <tr><td><span class="badge badge-orange">Frontend</span></td><td>85+ script tags in layout — no bundling or module system</td></tr>
+            <tr><td><span class="badge badge-orange">Data</span></td><td>Multi-tenancy partially implemented — WorkSpaceId query filters are commented out in DbContext</td></tr>
+            <tr><td><span class="badge badge-orange">Data</span></td><td>Soft delete without cleanup — deleted records accumulate indefinitely</td></tr>
+            <tr><td><span class="badge badge-red">Security</span></td><td><code>[AllowAnonymous]</code> on scheduling endpoints in HomeController</td></tr>
+            <tr><td><span class="badge badge-orange">Ops</span></td><td>Background jobs as console app — requires external Task Scheduler</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- S13: MODERN ARCHITECTURE -->
+    <section class="section" id="s13">
+      <div class="section-header">
+        <span class="section-num">13</span>
+        <h2>Proposed Modern Architecture</h2>
+      </div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin-bottom:12px">Technology Recommendations</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Recommended</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>Runtime</td><td><strong>.NET 8+ (LTS)</strong></td><td>Long-term support, modern C# features</td></tr>
+            <tr><td>API</td><td><strong>ASP.NET Core Minimal APIs</strong></td><td>Clean REST with OpenAPI/Swagger</td></tr>
+            <tr><td>ORM</td><td><strong>EF Core 8+</strong></td><td>Mature, code-first migrations</td></tr>
+            <tr><td>Auth</td><td><strong>ASP.NET Identity + JWT</strong></td><td>Stateless auth for API</td></tr>
+            <tr><td>Background Jobs</td><td><strong>Hangfire</strong></td><td>In-process, dashboard, retry logic</td></tr>
+            <tr><td>Messaging</td><td><strong>MediatR (CQRS)</strong></td><td>Decoupled commands/queries</td></tr>
+            <tr><td>Frontend</td><td><strong>React 18+ + TypeScript</strong></td><td>Component-based, mature ecosystem</td></tr>
+            <tr><td>Real-Time</td><td><strong>SignalR</strong></td><td>Push notifications for task assignments</td></tr>
+            <tr><td>File Storage</td><td><strong>Azure Blob Storage</strong></td><td>Scalable, replaces local filesystem</td></tr>
+            <tr><td>Caching</td><td><strong>Redis</strong></td><td>Distributed cache for sessions and queries</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin:32px 0 12px">Migration Phases</p>
+      <div class="phases">
+        <div class="phase">
+          <div class="phase-num">Phase 01</div>
+          <div class="phase-title">API Layer</div>
+          <div class="phase-time">4–6 weeks</div>
+          <ul>
+            <li>Create .NET 8 Web API project</li>
+            <li>Migrate domain models to EF Core 8</li>
+            <li>Implement REST endpoints</li>
+            <li>Add Swagger / OpenAPI</li>
+            <li>JWT + Passport SSO integration</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-num">Phase 02</div>
+          <div class="phase-title">Business Logic</div>
+          <div class="phase-time">4–6 weeks</div>
+          <ul>
+            <li>CQRS with MediatR</li>
+            <li>Migrate service layer</li>
+            <li>FluentValidation</li>
+            <li>Hangfire background jobs</li>
+            <li>Unit & integration tests</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-num">Phase 03</div>
+          <div class="phase-title">Frontend Rebuild</div>
+          <div class="phase-time">6–8 weeks</div>
+          <ul>
+            <li>React + Vite + TypeScript</li>
+            <li>Auth flow &amp; workspace select</li>
+            <li>Dashboard, jobs, requests</li>
+            <li>SignalR notifications</li>
+            <li>Analytics dashboards</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <div class="phase-num">Phase 04</div>
+          <div class="phase-title">Polish & Deploy</div>
+          <div class="phase-time">2–4 weeks</div>
+          <ul>
+            <li>User acceptance testing</li>
+            <li>Data migration scripts</li>
+            <li>Performance testing</li>
+            <li>CI/CD pipeline</li>
+            <li>Rollback plan</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="font-weight:600;color:var(--text-bright);margin:32px 0 10px">Legacy vs Modern Comparison</p>
+      <div class="compare-header">
+        <span></span>
+        <span>Legacy</span>
+        <span>Modern</span>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-row"><div class="compare-label">Architecture</div><div class="compare-old">MVC Monolith</div><div class="compare-new">API + SPA Separation</div></div>
+        <div class="compare-row"><div class="compare-label">API</div><div class="compare-old">No API (HTML views only)</div><div class="compare-new">Full REST + Swagger</div></div>
+        <div class="compare-row"><div class="compare-label">Frontend</div><div class="compare-old">jQuery + Razor</div><div class="compare-new">React + TypeScript</div></div>
+        <div class="compare-row"><div class="compare-label">Real-time</div><div class="compare-old">Page refresh / manual</div><div class="compare-new">SignalR push notifications</div></div>
+        <div class="compare-row"><div class="compare-label">Background Jobs</div><div class="compare-old">External console app</div><div class="compare-new">In-process Hangfire</div></div>
+        <div class="compare-row"><div class="compare-label">Testing</div><div class="compare-old">None</div><div class="compare-new">Unit, integration, E2E</div></div>
+        <div class="compare-row"><div class="compare-label">Security</div><div class="compare-old">Cookie + AllowAnonymous issues</div><div class="compare-new">JWT + proper endpoint security</div></div>
+        <div class="compare-row"><div class="compare-label">Multi-Tenancy</div><div class="compare-old">Partially implemented</div><div class="compare-new">Proper tenant isolation</div></div>
+        <div class="compare-row"><div class="compare-label">Monitoring</div><div class="compare-old">None</div><div class="compare-new">Application Insights / Grafana</div></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Smooth scrolling for nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.style.borderLeftColor = 'transparent');
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) { active.style.borderLeftColor = 'var(--accent)'; active.style.color = 'var(--text-bright)'; }
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

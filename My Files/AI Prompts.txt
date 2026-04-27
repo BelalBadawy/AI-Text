@@ -1,0 +1,26 @@
+
+check if there any unclear tasks you can ask me from 3-20 questions
+
+########################################################
+
+You are a senior software architect and technical writer.
+
+Your task is to convert this plan into a detailed, structured Tasks Document to be placed inside the /docs folder.
+
+Requirements:
+
+1. Break down the entire plan into clear, actionable development tasks.
+2. Organize tasks into logical sections (e.g., Setup, Domain, Application, Infrastructure, API, Testing, Deployment).
+3. Each task must:
+   - Be specific and implementation-ready
+   - Follow a logical execution order
+   - Include enough detail so a developer can execute without ambiguity
+
+4. Format:
+   - Use Markdown
+   - Use checkbox lists for tracking progress:
+     - [ ] for incomplete tasks
+     - [x] for completed tasks (leave all unchecked initially)
+	 
+	 
+	 ########################################################

@@ -1,0 +1,9 @@
+https://smithery.ai/skills/spallempati/csharp-development
+
+https://github.com/github/awesome-copilot/blob/main/skills/sql-code-review/SKILL.md
+
+https://github.com/mitkox/ai-coding-factory
+
+https://github.com/Aaronontheweb/dotnet-skills/tree/master
+
+https://github.com/wshaddix/dotnet-skills

@@ -1,0 +1,45 @@
+My Goal
+I want you to analyze my boilerplate and generate a Reusable Agent Skill (comprising an AI Prompt definition and an execution script) that can replicate this exact solution dynamically. When I run this skill and provide a ProjectName, it must automatically:
+
+Create the .slnx file.
+Create the 4 projects: {ProjectName}.Domain, {ProjectName}.Application, {ProjectName}.Infrastructure, {ProjectName}.API.
+Add them to the .slnx.
+Set up the exact correct project-to-project references.
+Recreate every folder and file from my boilerplate, but dynamically replace the old root namespace with the new {ProjectName} namespace in all .cs and .csproj files.
+Restore the exact NuGet packages for each project.
+Phase 1: Analyze My Boilerplate
+I will provide you with my boilerplate code, folder structure, .slnx content, .csproj files, and source code. Your first task is to map out:
+
+The exact folder tree for each of the 4 projects.
+Every NuGet package and version per .csproj.
+The exact project reference chains.
+All boilerplate code, noting the exact lines where the root namespace is used (so we know what to replace later).
+Phase 2: Generate the Agent Skill Definition
+Create the .md or text-based prompt file that I can save as an Agent Skill in VS Code (for tools like GitHub Copilot Chat, Cline, or Continue.dev). This prompt must instruct the AI agent on exactly how to scaffold the solution when invoked. It must include:
+
+Input Parameter Handling: Ask the user for ProjectName.
+Execution Instructions: Step-by-step directions for the AI to create directories, write files, and run CLI commands (dotnet new sln -n, dotnet new classlib, dotnet sln add, etc.).
+Templating Rules: Explicit instructions to take the boilerplate code I provided and replace my old namespace (e.g., MyOldBoilerplate.Domain) with the new namespace (e.g., {ProjectName}.Domain).
+Phase 3: Generate the Master Scaffolding Script
+AI Agents can sometimes make mistakes writing 50+ files manually. To make this skill bulletproof, generate a PowerShell script (Scaffold.ps1) and a Bash script (Scaffold.sh) that the Agent Skill can execute.
+
+The script must:
+
+Accept a -ProjectName parameter.
+Create the directory structure dynamically.
+Run the dotnet new commands to create the classlib/webapi projects.
+Create the .slnx (or use dotnet new sln which defaults to .slnx in .NET 10) and add the projects.
+Run dotnet add reference to link the projects correctly (Domain has none; App refs Domain; Infra refs App; API refs App & Infra).
+Run dotnet add package for every NuGet required.
+Write out the boilerplate C# files dynamically, using string replacement to ensure the namespaces match the -ProjectName.
+How We Will Work
+I will now provide you with my boilerplate structure and files. Please acknowledge that you understand the mission. Then, as I paste the files, build the mapping. Once I say "GENERATE", you will output:
+
+The Agent Skill Prompt Definition.
+The Scaffold.ps1 script.
+The Scaffold.sh script.
+Are you ready? Here is my boilerplate structure and code:
+
+
+
+I will run this prompt from my vscode terminal which already have the solution structure I want the script file run independent of any file the script must have all the files info no need to reference any other project to be able to complete the task just this file alone 

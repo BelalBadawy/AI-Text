@@ -1,0 +1,54 @@
+I need you to perform a thorough code review of my "Category" feature implementation in an ASP.NET Core solution following Clean Architecture principles. The solution has the following projects:
+
+1. Domain (Entities, Value Objects, Interfaces, Specifications)
+2. Application (DTOs, Commands, Queries, Handlers, Validators, AutoMapper profiles)
+3. Infrastructure (Repositories, DbContext, Migrations, Caching)
+4. API (Controllers, Middleware, Filters, Endpoints)
+
+Please review the Category feature code I will provide and evaluate it against:
+
+**Performance:**
+- Database queries (N+1 problems, indexing suggestions, eager/lazy loading)
+- Async/await usage (avoid .Result, .Wait(), deadlock risks)
+- Caching strategy (memory cache, distributed cache, response caching)
+- Pagination, filtering, sorting implementation efficiency
+- Large result set handling
+
+**Best Practices:**
+- Clean Architecture layer separation (no dependencies violations)
+- Repository pattern implementation (generic vs specific)
+- Unit of Work pattern usage
+- CQRS compliance (commands vs queries separation)
+- DTO vs entity exposure
+- Exception handling and logging
+- Validation approach (FluentValidation, data annotations)
+- Dependency injection lifecycle management (Scoped, Transient, Singleton)
+- Solid principles adherence
+
+**Security:**
+- Input sanitization
+- Authorization checks (roles, claims, policies)
+- SQL injection prevention (raw queries if any)
+- Mass assignment protection
+
+**Category-specific concerns:**
+- Hierarchical data handling (if parent/child categories exist)
+- Slug generation and uniqueness
+- Soft delete implementation (if any)
+- Unique constraints (name, slug)
+- Performance of tree structure queries (recursive CTEs, materialized path, etc.)
+
+**API-specific:**
+- RESTful conventions
+- Response models consistency
+- Status codes usage
+- Versioning compatibility
+- Swagger documentation completeness
+
+Please provide:
+1. A summary of critical issues found (if any)
+2. Specific code snippets with suggested fixes
+3. Performance optimization recommendations
+4. Refactoring suggestions for better maintainability
+5. Any missing implementations (logging, caching, validation, etc.)
+6. Overall rating (1-10) for this feature implementation
