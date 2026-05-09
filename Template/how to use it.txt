@@ -1,0 +1,1 @@
+.\Scaffold.ps1 -ProjectName MyTempApp
