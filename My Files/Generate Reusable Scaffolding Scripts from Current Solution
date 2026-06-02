@@ -1,0 +1,94 @@
+# Agent Task: Generate Reusable Scaffolding Scripts from Current Solution
+
+You are an AI coding assistant with full read‑access to the entire workspace.  
+The workspace contains a working .NET 10 solution (`UMSSolution`) that follows Clean Architecture and uses:
+
+- .NET 10, ASP.NET Core Web API
+- Layered projects: API, Application, Domain, Infrastructure (+ dedicated test projects for each)
+- React 19 + TypeScript frontend (in a `UMS.Client` folder, not currently in the solution file but still present)
+- Root namespace: `UMS`
+- Pattern: CQRS with Mediator, FluentValidation, Mapster, EF Core 10, JWT auth, etc.
+
+Your task: **Produce three files** that allow anyone to recreate this exact solution for any new project name.
+
+---
+
+## 1. Analyse the Existing Solution
+
+**CRITICAL IGNORING RULE:**  
+Do **NOT** look into, read, traverse, or list files from the following directories or any similar build/cache/dependency folders:
+
+- `bin`, `obj`, `node_modules`, `.vs`, `dist`, `.git`, `packages`, `TestResults`, `coverage`, `.sonarqube`, `wwwroot/lib`, etc.
+- Only scan **source code, configuration, project files, and other essential project assets** that are manually written (e.g., `.cs`, `.csproj`, `.slnx`, `.json`, `.tsx`, `.ts`, `.css`, `.html`, `.cshtml`, `.razor`, `.props`, `.targets`, `.gitignore`, `.editorconfig`, etc.).
+- When building the directory tree, completely ignore the ignored folders – do not include them.
+
+With that rule strictly followed, extract:
+
+- The exact directory tree for each project, including empty folders (but only source directories).
+- The exact `.slnx` file content (the solution file).
+- Every `.csproj` file, noting all `<PackageReference>` with versions, all `<ProjectReference>`, all target frameworks, and any other settings.
+- All `.cs` source files, configuration files (`appsettings*.json`, `Program.cs`, etc.), and any other file that is part of the build.
+- For the React client (`UMS.Client` or similar): all source files (`package.json`, `vite.config.ts`, `tsconfig.json`, all `.tsx`, `.ts`, `.css`, etc.).
+
+For every file, note **every line where the old root namespace `UMS` appears**. This includes:
+- `namespace UMS.…`
+- `using UMS.…`
+- Configuration keys, file paths, or strings that contain `UMS` and should be renamed for a new project (e.g., assembly names, solution folder names, default namespaces, DbContext connection string names, etc.).
+
+---
+
+## 2. Generate the Three Output Files
+
+Based on the analysis, create the following files in the **workspace root** (or a subfolder named `Scaffolding` if preferred). Each file must be **100% self-contained** – no external template files are allowed. All file contents must be embedded directly inside the scripts using single‑quoted here‑strings (PowerShell) or quoted heredocs (Bash).
+
+### A. Agent Skill Prompt Definition (`scaffold-agent-skill.md`)
+
+This is a markdown file that can be saved as a reusable VS Code / Cline / Continue Agent Skill. It instructs a future AI agent (when invoked with a `ProjectName`) to scaffold the entire solution from scratch. It must include:
+
+- **Input parameter**: Ask the user for `ProjectName`.
+- **Step‑by‑step instructions** for the AI to:
+  - Create the `.slnx` with `dotnet new sln -n {ProjectName}`
+  - Create all classlib, webapi, and xunit test projects (the 8 .NET projects).
+  - Add projects to the solution using `dotnet sln add`.
+  - Add project‑to‑project references exactly as they are in the original solution (Domain: no refs, Application → Domain, Infrastructure → Application, API → Application & Infrastructure, tests → their SUTs).
+  - Add all NuGet packages with the exact versions you found.
+  - Embed and write out every C# file, configuration file, and any other required static files (e.g., `.gitignore`, `appsettings.json`), performing a **full namespace replacement**: change every occurrence of `UMS` to `{ProjectName}` (the user‑provided name).
+  - For the React client (if the workspace includes it): recreate the entire frontend project with the same file tree, but rename the client project folder to `{ProjectName}.Client` and replace any occurrences of the old project name in `package.json` name, `vite.config.ts` proxy paths, etc. (the AI will adapt based on the existing structure).
+- **Critical rule**: The agent must never require any external templates; everything must be inline.
+
+### B. PowerShell Scaffolding Script (`Scaffold.ps1`)
+
+A single `.ps1` script that does everything the Agent Skill Prompt describes, but programmatically:
+
+- Accept a parameter `-ProjectName` (mandatory).
+- Create the full directory tree.
+- Run all `dotnet new` / `dotnet sln add` / `dotnet add reference` / `dotnet add package` commands.
+- Write every file using `@' ... '@` (single‑quoted here‑strings) with the content already replaced to use `$ProjectName`. To avoid interpolation issues, embed the file content with a placeholder (e.g., `___PROJECTNAME___`) and then dynamically replace it with the actual project name using `-replace` before writing to disk. This keeps the here‑strings single‑quoted and safe.
+- Ensure the script is executable and works on any Windows machine with .NET 10 SDK installed.
+
+### C. Bash Scaffolding Script (`Scaffold.sh`)
+
+The exact equivalent of the PowerShell script, but for Linux/macOS. Use `<< 'EOF'` quoted heredocs to embed file contents, and replace the `UMS` namespace with `$PROJECTNAME` using `sed` or by writing files with placeholder substitution. Make it compatible with .NET 10 CLI on bash.
+
+---
+
+## 3. Rules for Self‑Containment
+
+- **No reading of external files.** Every file that the scaffolded solution needs must be stored as a string literal inside the script.
+- **No `Copy‑Item` from template folders.** Everything is written via `Set‑Content`, `Out‑File`, `cat >`, etc.
+- **Exact NuGet versions** from the current solution must be hardcoded.
+- **React client** (if present) must also be fully regenerated by the scripts: the script will create the client folder, write `package.json`, install dependencies with `npm install`, and copy/write all source files. This ensures the entire solution can be scaffolded on a new machine with only the script.
+
+---
+
+## 4. Deliverables
+
+Please create the three files in the workspace:
+
+1. `scaffold-agent-skill.md`
+2. `Scaffold.ps1`
+3. `Scaffold.sh`
+
+Once done, confirm that the scripts are self‑contained by showing a short excerpt of how a file is embedded (e.g., a small .cs file) and how the namespace replacement is performed.
+
+Now, execute this analysis and generation. The workspace is open; you have access to everything.
